@@ -34,7 +34,9 @@ impl AsciiRenderer {
         Ok(())
     }
     
-    /// With an `AsciiFrame`, 
+    /// With an `AsciiFrame`, output any ASCII characters that changed from
+    /// `prev_frame` to the screen, and record these changes into
+    /// `prev_frame`
     pub fn render(&mut self, frame: &AsciiFrame) -> Result<(), Box<dyn Error>> {
         // did frame size change?
         if frame.w != self.prev_w 
@@ -48,7 +50,6 @@ impl AsciiRenderer {
             Self::clear_screen()?;
         }
         
-        //let chars = frame.chars();
         for y in 0..frame.h {
             for x in 0..frame.w {
                 let i = y * frame.w + x;
@@ -57,6 +58,8 @@ impl AsciiRenderer {
                     && i < self.prev_frame.len()
                     && frame.chars()[i] != self.prev_frame[i] {
                     
+                    // ANSI escape code sequence, move cursor to specified
+                    // row & column & change character
                     print!("\x1B[{};{}H{}", y+1, x+1, frame.chars()[i]);
                     self.prev_frame[i] = frame.chars()[i];
                 }
