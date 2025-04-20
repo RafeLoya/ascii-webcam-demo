@@ -8,9 +8,14 @@ use crate::image_frame::ImageFrame;
 const DEFAULT_BYTES_PER_PIXEL: usize = 3;
 
 pub struct Camera {
+    /// Requested image width
     w: usize,
+    /// Requested image height
     h: usize,
+    /// FFmpeg child process, this component actually feeds the images
+    /// to the program
     ffmpeg_proc: Child,
+    
     frame_reader: BufReader<std::process::ChildStdout>,
     frame_buffer: Vec<u8>
 }
@@ -40,6 +45,7 @@ impl Camera {
         })
     }
     
+    /// Reads a frame provided by the camera into the provided `ImageFrame`
     pub fn capture_frame(&mut self, frame: &mut ImageFrame) -> Result<(), Box<dyn Error>> {
         if frame.w != self.w || frame.h != self.h {
             return Err(format!(
@@ -48,11 +54,11 @@ impl Camera {
             ).into());
         }
         
+        // read in the frame
         if let Err(e) = self.frame_reader.read_exact(&mut self.frame_buffer) {
             return Err(format!("failed to read camera frame: {}", e).into());
         }
         
-        //let target_buffer = frame.buffer_mut();
         if self.frame_buffer.len() != frame.buffer().len() {
             return Err(format!(
                 "buffer size not consistent between camera ({}) and frame ({})",
@@ -60,6 +66,7 @@ impl Camera {
             ).into());
         }
         
+        // copy the frame into the provided ImageFrame
         frame.buffer_mut().copy_from_slice(&self.frame_buffer);
         
         Ok(())

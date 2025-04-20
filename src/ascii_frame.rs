@@ -6,8 +6,11 @@ const DEFAULT_H: usize = 40;
 /// ASCII representation of an `ImageFrame` after contrast, brightness,
 /// and luminance transformations
 pub struct AsciiFrame {
+    /// The amount of columns in the frame
     pub w: usize,
+    /// The amount of rows in the frame
     pub h: usize,
+    /// processed image pixels, interpreted as characters
     chars: Vec<char>,
 }
 

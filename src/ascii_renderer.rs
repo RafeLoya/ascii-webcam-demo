@@ -8,9 +8,11 @@ use crate::ascii_frame::AsciiFrame;
 /// Outputs ASCII frame data to `stdout`
 pub struct AsciiRenderer {
     /// used to reduce terminal flickering and
-    /// to later be used for changing window sizes
+    /// (to later be used) for changing window sizes
     prev_frame: Vec<char>,
+    /// width of previous `AsciiFrame`
     prev_w: usize,
+    /// height of previous `AsciiFrame`
     prev_h: usize,
 }
 
