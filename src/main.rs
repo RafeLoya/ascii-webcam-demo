@@ -4,6 +4,7 @@ mod ascii_renderer;
 mod ascii_frame;
 mod image_frame;
 mod ascii_converter;
+mod edge_detector;
 
 use crate::camera::Camera;
 use crate::ascii_converter::AsciiConverter;
@@ -13,6 +14,7 @@ use crate::image_frame::ImageFrame;
 
 use std::{thread};
 use std::time::Duration;
+use crate::edge_detector::EdgeDetector;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let camera_w = 640;
@@ -26,11 +28,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut image_frame = ImageFrame::new(camera_w, camera_h, 3)?;
     let mut ascii_frame = AsciiFrame::new(ascii_w, ascii_h, ' ')?;
     
-    let converter = AsciiConverter::new(
-        AsciiConverter::DEFAULT_ASCII.chars().collect(),
-        1.5,
-        0.0
-    );
+    let edge_detector = EdgeDetector::new(camera_w, camera_h, 20.0);
+    let _edge_thread = edge_detector.start(camera_w, camera_h)?;
+    
+    let converter = AsciiConverter::default();
     
     let mut renderer = AsciiRenderer::new()?;
     

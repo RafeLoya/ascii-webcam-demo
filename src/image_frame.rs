@@ -1,4 +1,5 @@
 use std::error::Error;
+use crate::ascii_converter::{B_LUMINANCE, G_LUMINANCE, R_LUMINANCE};
 
 /// Initial frame received from webcam feed
 pub struct ImageFrame{
@@ -7,7 +8,7 @@ pub struct ImageFrame{
     /// usually 3 (RGB)
     pub bytes_per_pixel: usize,
     /// frame data
-    buffer: Vec<u8>,
+    pub buffer: Vec<u8>,
 }
 
 impl ImageFrame{
@@ -47,5 +48,17 @@ impl ImageFrame{
             self.buffer[i + 1],
             self.buffer[i + 2],
         ))
+    }
+
+    /// calculate the grayscale intensity value (relative luminance)
+    /// of a given pixel
+    pub fn calculate_intensity((r, g, b): (u8, u8, u8)) -> f32 {
+        R_LUMINANCE * r as f32 + G_LUMINANCE * g as f32 + B_LUMINANCE * b as f32
+    }
+
+    /// calculate the grayscale intensity value (relative luminance)
+    /// of a given pixel and cast as a u8
+    pub(crate) fn calculate_intensity_u8((r, g, b): (u8, u8, u8)) -> u8 {
+        ImageFrame::calculate_intensity((r, g, b)) as u8
     }
 }
