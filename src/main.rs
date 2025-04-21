@@ -63,7 +63,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             eprintln!("failed while rendering frame: {}", e);
             break;
         }
-        
+
         thread::sleep(Duration::from_millis(10));
     }
     
