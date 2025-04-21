@@ -5,33 +5,46 @@ mod ascii_frame;
 mod image_frame;
 mod ascii_converter;
 mod edge_detector;
+mod ascii_converter_config;
 
-use crate::camera::Camera;
 use crate::ascii_converter::AsciiConverter;
 use crate::ascii_frame::AsciiFrame;
 use crate::ascii_renderer::AsciiRenderer;
+use crate::camera::Camera;
 use crate::image_frame::ImageFrame;
 
-use std::{thread};
+use crate::ascii_converter_config::AsciiConverterConfig;
 use std::time::Duration;
-use crate::edge_detector::EdgeDetector;
+use std::thread;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let camera_w = 640;
-    let camera_h = 480;
+    let config = AsciiConverterConfig::new(
+        640,
+        480,
+        120,
+        40,
+        127.50,
+        1.5,
+        0.0
+    );
     
-    let ascii_w = 120;
-    let ascii_h = 40;
+    let mut camera = Camera::new(config.camera_width, config.camera_height)?;
     
-    let mut camera = Camera::new(camera_w, camera_h)?;
+    let mut image_frame = ImageFrame::new(config.camera_width, config.camera_height, 3)?;
+    let mut ascii_frame = AsciiFrame::new(config.ascii_width, config.ascii_height, ' ')?;
     
-    let mut image_frame = ImageFrame::new(camera_w, camera_h, 3)?;
-    let mut ascii_frame = AsciiFrame::new(ascii_w, ascii_h, ' ')?;
-    
-    let edge_detector = EdgeDetector::new(camera_w, camera_h, 20.0);
-    let _edge_thread = edge_detector.start(camera_w, camera_h)?;
-    
-    let converter = AsciiConverter::default();
+    let converter = AsciiConverter::new(
+        AsciiConverter::DEFAULT_ASCII_INTENSITY.chars().collect(),
+        AsciiConverter::DEFAULT_ASCII_HORIZONTAL.chars().collect(),
+        AsciiConverter::DEFAULT_ASCII_VERTICAL.chars().collect(),
+        AsciiConverter::DEFAULT_ASCII_FORWARD.chars().collect(),
+        AsciiConverter::DEFAULT_ASCII_BACK.chars().collect(),
+        config.camera_width,
+        config.camera_height,
+        config.edge_threshold,
+        config.contrast,
+        config.brightness
+    )?;
     
     let mut renderer = AsciiRenderer::new()?;
     

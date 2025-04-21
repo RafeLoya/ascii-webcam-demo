@@ -63,13 +63,14 @@ impl AsciiConverter {
         h: usize,
         edge_threshold: f32, 
         contrast: f32, 
-        brightness: f32) -> Self {
+        brightness: f32
+    ) -> Result<Self,  Box<dyn Error>> {
         
         let edge_detector = EdgeDetector::new(w, h, edge_threshold);
         
-        edge_detector.start(w, h).expect("Failed to start edge detector");
+        edge_detector.start(w, h)?;
         
-        Self {
+        Ok(Self {
             edge_detector,
             ascii_intensity,
             ascii_horizontal,
@@ -79,10 +80,10 @@ impl AsciiConverter {
             edge_threshold,
             contrast,
             brightness
-        }
+        })
     }
     
-    pub fn default() -> Self {
+    pub fn default() -> Result<Self,  Box<dyn Error>> {
         Self::new(
             Self::DEFAULT_ASCII_INTENSITY.chars().collect(),
             Self::DEFAULT_ASCII_HORIZONTAL.chars().collect(),
