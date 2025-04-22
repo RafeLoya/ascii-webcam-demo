@@ -5,7 +5,7 @@ mod ascii_frame;
 mod image_frame;
 mod ascii_converter;
 mod edge_detector;
-mod ascii_converter_config;
+mod video_config;
 
 use crate::ascii_converter::AsciiConverter;
 use crate::ascii_frame::AsciiFrame;
@@ -13,12 +13,12 @@ use crate::ascii_renderer::AsciiRenderer;
 use crate::camera::Camera;
 use crate::image_frame::ImageFrame;
 
-use crate::ascii_converter_config::AsciiConverterConfig;
+use crate::video_config::VideoConfig;
 use std::time::Duration;
 use std::thread;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = AsciiConverterConfig::new(
+    let mut config = VideoConfig::new(
         640,
         480,
         120,

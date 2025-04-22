@@ -1,6 +1,4 @@
-
-
-pub struct AsciiConverterConfig {
+pub struct VideoConfig {
     pub camera_width: usize,
     pub camera_height: usize,
     pub ascii_width: usize,
@@ -10,7 +8,7 @@ pub struct AsciiConverterConfig {
     pub brightness: f32,
 }
 
-impl AsciiConverterConfig {
+impl VideoConfig {
     pub fn default() -> Self {
         Self {
             camera_width: 640,

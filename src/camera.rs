@@ -15,8 +15,9 @@ pub struct Camera {
     /// FFmpeg child process, this component actually feeds the images
     /// to the program
     ffmpeg_proc: Child,
-    
+    /// Reader, reads output frames from the FFmpeg child process
     frame_reader: BufReader<std::process::ChildStdout>,
+    /// Intermediate buffer between FFmpeg child process and ImageFrame data
     frame_buffer: Vec<u8>
 }
 
