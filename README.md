@@ -1,4 +1,4 @@
-# ASCII-Webcam-Demo
+# pinhole-demo
 
 This is a small demo / experiment for a larger Rust project that involves
 streaming live video feeds from inside a terminal. After struggling with various
